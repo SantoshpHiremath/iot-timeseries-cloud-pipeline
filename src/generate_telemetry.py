@@ -4,13 +4,12 @@ in-vehicle logging data: per-device JSON log lines with a timestamp,
 voltage, current, temperature, and state-of-charge (SOC) reading, plus
 realistic messiness (out-of-order arrival, occasional duplicate
 deliveries, and a device that goes silent for a window — the same class
-of real-world IoT ingestion problems named in the posting: "structuring
-raw IoT logs" and "ensure data integrity" during OTA deployments).
+of real-world IoT ingestion problems: structuring raw IoT logs and
+ensuring data integrity during OTA deployments).
 
-Not real Munich Electrification or vehicle data. Modeled on the domain
-the posting describes (battery cell data, IoT logs, test-car
-deployments) to build and honestly verify a real ingestion + storage +
-integrity-monitoring pipeline against inspectable synthetic data.
+The data is synthetic, modeled on battery cell data, IoT logs, and test-car
+deployments, so the ingestion + storage + integrity-monitoring pipeline can
+be verified against inspectable data.
 """
 
 import json
@@ -71,8 +70,8 @@ def generate_raw_upload_batches(seed=42, n_points_per_device=500):
     Returns a dict {device_id: [log_line, ...]} simulating what would be
     uploaded to S3 as raw, unstructured JSON per device. One device
     (veh-002) has an injected silent window (rows 200-250) simulating an
-    OTA-update connectivity gap -- the exact scenario the posting names
-    ("monitor OTA updates to ensure data integrity").
+    OTA-update connectivity gap -- the scenario of monitoring OTA updates
+    to ensure data integrity.
 
     Also returns out-of-order versions of each device's log (shuffled
     within a bounded window) to simulate realistic out-of-order network

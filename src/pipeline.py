@@ -59,8 +59,7 @@ def run_pipeline(seed=42, batch_size=50):
     Public entry point, wrapped in @mock_aws so every boto3 call inside
     (create_bucket, put_object, list_objects_v2, get_object) is served
     by moto's in-process mock rather than attempting a real network call
-    to AWS -- this sandbox has no outbound access to AWS (see
-    s3_landing.py's module docstring for the disclosure). The DuckDB
+    to AWS (see s3_landing.py's module docstring). The DuckDB
     connection returned here stays open after the mock_aws context
     exits, since DuckDB itself is real and local, not mocked.
     """
@@ -70,9 +69,9 @@ def run_pipeline(seed=42, batch_size=50):
 def measure_query_performance(con, device_id="veh-001", n_repeats=200):
     """
     Compare query latency for a device-range lookup with the
-    (device_id, ts) index present vs. dropped, demonstrating the actual
-    query-performance-improvement task the posting names, with a real
-    measured number rather than an assumed one.
+    (device_id, ts) index present vs. dropped, demonstrating the
+    query-performance improvement, with a real measured number rather than
+    an assumed one.
     """
     con.execute("DROP INDEX IF EXISTS idx_telemetry_device_ts")
     t0 = time.perf_counter()

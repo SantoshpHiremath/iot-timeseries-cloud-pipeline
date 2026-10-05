@@ -1,7 +1,7 @@
 """
 Tests for the S3 landing layer, run against moto's mocked AWS backend
-(see src/s3_landing.py's module docstring for why -- this sandbox has no
-outbound access to real AWS). These tests exercise the real boto3 client
+(see src/s3_landing.py's module docstring for why -- S3 is simulated rather
+than using a real AWS account). These tests exercise the real boto3 client
 API surface (create_bucket, put_object, list_objects_v2 via paginator,
 get_object) against the mock, which is the same interface a real AWS
 account would present.

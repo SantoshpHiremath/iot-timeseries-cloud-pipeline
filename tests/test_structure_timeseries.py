@@ -37,7 +37,7 @@ def test_duplicate_dedup_does_not_overcollapse_distinct_readings_at_same_timesta
     Regression-style test for a real, non-obvious dedup risk: two
     DIFFERENT readings from different devices, at the same timestamp,
     must NOT be collapsed into one row -- only exact full-row duplicates
-    are removed. Same discipline as this portfolio's ELT project's dedup
+    are removed. Same discipline as the elt-selfservice-analytics dedup
     test.
     """
     con = get_connection()

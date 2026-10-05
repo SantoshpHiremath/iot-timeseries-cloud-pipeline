@@ -2,14 +2,9 @@
 Raw IoT log landing zone, using real boto3 (the actual AWS SDK for
 Python) against an S3 bucket.
 
-Honest disclosure: this sandbox has no outbound access to AWS (aws.amazon.com
-itself returns a 403 from the sandbox's outbound proxy, the same class of
-network block documented elsewhere in this application portfolio -- Docker
-Hub, OpenML, Zenodo, timeseriesclassification.com were all tried and
-blocked for other projects). Real AWS console/API access is not available
-here. Rather than fake having used AWS, or skip cloud-SDK work entirely,
-this module is built and tested against `moto` -- the standard library the
-AWS Python ecosystem itself uses to test real boto3 code without touching
+The S3 backend is simulated: this module is built and tested against
+`moto` -- the standard library the
+AWS Python ecosystem uses to test real boto3 code without touching
 a real AWS account (https://github.com/getmoto/moto, used by AWS's own
 SDK test suites and thousands of production codebases to unit-test S3/
 DynamoDB/etc. code paths). The boto3 calls below are the exact same calls

@@ -1,14 +1,12 @@
 """
 Structures raw, messy IoT log objects (landed in S3 as unordered,
 occasionally-duplicated JSON lines) into a clean, queryable time-series
-table in DuckDB -- the "structuring raw IoT logs, designing data models,
-improving time-series storage and query performance" task from the
-posting.
+table in DuckDB -- structuring raw IoT logs, designing data models,
+and improving time-series storage and query performance.
 
 Design choices, and why:
-- DuckDB, not a hosted time-series DB (InfluxDB/Timestream): this
-  sandbox cannot reach a real hosted time-series database service either
-  (same network constraint as AWS/S3 -- see s3_landing.py's disclosure).
+- DuckDB, not a hosted time-series DB (InfluxDB/Timestream): storage is
+  local and embedded, and the schema carries over to a hosted service.
   DuckDB is a genuine embedded analytical database with real columnar
   storage and real SQL, so the schema design, indexing, and query-
   performance work here is real database engineering, just running
@@ -18,8 +16,8 @@ Design choices, and why:
   collapse to one row; two different readings that happen to arrive at
   the same timestamp should NOT be silently merged (see the test
   checking this doesn't over-collapse genuinely distinct readings --
-  the same "verify dedup doesn't overcollapse" discipline used in this
-  portfolio's ELT project).
+  the same "verify dedup doesn't overcollapse" discipline used in the
+  elt-selfservice-analytics project).
 - Sorting by timestamp per device after structuring, since raw delivery
   order is not read order for a time-series table.
 """
@@ -61,7 +59,7 @@ def structure_batch(con, raw_bytes):
     Parse one raw S3 object's bytes and insert into the telemetry table,
     deduplicating against what's already stored (exact-match dedup on
     all fields, the same "true duplicate deliveries only" discipline as
-    the rest of this portfolio's ELT work).
+    the elt-selfservice-analytics project).
     """
     records = parse_jsonl_bytes(raw_bytes)
     if not records:
@@ -106,8 +104,7 @@ def detect_data_gaps(con, device_id, expected_interval_s=10, gap_multiplier=3):
     Data-integrity check: find timestamp gaps in a device's series
     larger than `gap_multiplier` times the expected sampling interval --
     a real signal of a connectivity loss, e.g. during an OTA update,
-    directly matching the posting's "monitor OTA updates to ensure data
-    integrity" task. Returns a list of (gap_start_ts, gap_end_ts,
+    which is how OTA updates are monitored for data integrity. Returns a list of (gap_start_ts, gap_end_ts,
     gap_seconds) tuples.
     """
     rows = con.execute(
